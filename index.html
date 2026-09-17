@@ -4,52 +4,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VideoAI</title>
+
+<title>VideoAI - AI Content Creator</title>
 
 <style>
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
 }
 
 body {
-  background: #0f172a;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #0f172a, #312e81);
   color: white;
   min-height: 100vh;
 }
 
 header {
   text-align: center;
-  padding: 50px 20px 30px;
+  padding: 45px 20px 25px;
 }
 
 header h1 {
-  font-size: 45px;
+  font-size: 48px;
+  margin: 0;
 }
 
 header p {
   color: #cbd5e1;
-  margin-top: 10px;
   font-size: 18px;
 }
 
 .container {
-  max-width: 700px;
+  max-width: 800px;
   margin: auto;
   padding: 20px;
 }
 
 .card {
-  background: #1e293b;
-  padding: 25px;
-  border-radius: 18px;
+  background: rgba(30, 41, 59, 0.95);
+  padding: 30px;
+  border-radius: 20px;
 }
 
 label {
   display: block;
-  margin: 18px 0 8px;
+  margin-top: 18px;
+  margin-bottom: 8px;
   font-weight: bold;
 }
 
@@ -58,23 +59,24 @@ select {
   width: 100%;
   padding: 14px;
   border-radius: 10px;
-  border: 1px solid #475569;
+  border: 1px solid #64748b;
   background: #0f172a;
   color: white;
   font-size: 16px;
 }
 
 textarea {
-  min-height: 120px;
+  min-height: 110px;
+  resize: vertical;
 }
 
 button {
   width: 100%;
-  margin-top: 22px;
-  padding: 15px;
+  margin-top: 25px;
+  padding: 16px;
   border: none;
-  border-radius: 10px;
-  background: #7c3aed;
+  border-radius: 12px;
+  background: #8b5cf6;
   color: white;
   font-size: 18px;
   font-weight: bold;
@@ -82,16 +84,24 @@ button {
 }
 
 button:hover {
-  background: #6d28d9;
+  background: #7c3aed;
 }
 
-#result {
+.result {
   display: none;
-  margin-top: 25px;
-  padding: 20px;
+  margin-top: 30px;
+}
+
+.box {
   background: #0f172a;
-  border-radius: 12px;
+  padding: 20px;
+  border-radius: 14px;
+  margin-top: 15px;
   line-height: 1.7;
+}
+
+.box h3 {
+  margin-top: 0;
 }
 
 footer {
@@ -106,29 +116,30 @@ footer {
 
 <header>
   <h1>🎬 VideoAI</h1>
-  <p>Create AI video content easily</p>
+  <p>Turn your idea into an AI-ready video plan</p>
 </header>
 
 <div class="container">
+
   <div class="card">
 
-    <label>What video do you want to create?</label>
+    <label>💡 Video Topic</label>
 
     <textarea id="topic"
-      placeholder="Example: 5 amazing facts about space"></textarea>
+      placeholder="Example: 5 amazing facts about the universe"></textarea>
 
-    <label>Video Style</label>
+    <label>🎨 Video Style</label>
 
     <select id="style">
       <option>Educational</option>
       <option>Motivational</option>
-      <option>Story</option>
       <option>Facts</option>
+      <option>Story</option>
       <option>Funny</option>
       <option>News</option>
     </select>
 
-    <label>Language</label>
+    <label>🌍 Language</label>
 
     <select id="language">
       <option>English</option>
@@ -136,53 +147,94 @@ footer {
       <option>Telugu</option>
     </select>
 
-    <button onclick="generateVideo()">
-      ✨ Generate AI Video Script
+    <label>⏱️ Video Duration</label>
+
+    <select id="duration">
+      <option>30 seconds</option>
+      <option>60 seconds</option>
+      <option>90 seconds</option>
+    </select>
+
+    <button onclick="createVideo()">
+      🚀 Create Video Plan
     </button>
 
-    <div id="result"></div>
+    <div id="result" class="result">
+
+      <div class="box">
+        <h3>📝 Video Script</h3>
+        <p id="script"></p>
+      </div>
+
+      <div class="box">
+        <h3>🎙️ Voice-over</h3>
+        <p id="voice"></p>
+      </div>
+
+      <div class="box">
+        <h3>🎬 Scene Plan</h3>
+        <p id="scenes"></p>
+      </div>
+
+      <div class="box">
+        <h3>🖼️ Visual Prompt</h3>
+        <p id="visual"></p>
+      </div>
+
+    </div>
 
   </div>
+
 </div>
 
 <footer>
-  © 2026 VideoAI
+  © 2026 VideoAI • Free AI Content Creator
 </footer>
 
 <script>
-function generateVideo() {
+
+function createVideo() {
 
   const topic = document.getElementById("topic").value.trim();
   const style = document.getElementById("style").value;
   const language = document.getElementById("language").value;
-  const result = document.getElementById("result");
+  const duration = document.getElementById("duration").value;
 
-  if (!topic) {
-    alert("Please enter a video topic first.");
+  if (topic === "") {
+    alert("Please enter a video topic.");
     return;
   }
 
-  result.style.display = "block";
+  document.getElementById("result").style.display = "block";
 
-  result.innerHTML = `
-    <h2>🎥 Your Video Plan</h2>
-    <br>
-    <p><strong>Topic:</strong> ${topic}</p>
-    <p><strong>Style:</strong> ${style}</p>
-    <p><strong>Language:</strong> ${language}</p>
-    <br>
-    <h3>📝 Sample Script</h3>
-    <p>
-      Welcome to VideoAI! Today we are going to explore
-      <strong>${topic}</strong>.
-      Stay until the end to discover something amazing!
-    </p>
-    <br>
-    <p>🎙️ Voice-over: Ready</p>
-    <p>🖼️ Visual prompts: Ready</p>
-    <p>📱 Short-video format: Ready</p>
-  `;
+  document.getElementById("script").innerHTML =
+    "Today we are exploring <b>" + topic +
+    "</b>. This " + duration +
+    " " + style +
+    " video is designed for social media. " +
+    "Watch until the end to discover the most interesting facts and ideas about this topic!";
+
+  document.getElementById("voice").innerHTML =
+    "Voice language: <b>" + language +
+    "</b><br><br>" +
+    "Hello everyone! Today we're going to talk about " +
+    "<b>" + topic +
+    "</b>. Let's discover something amazing together!";
+
+  document.getElementById("scenes").innerHTML =
+    "<b>Scene 1:</b> Show an exciting introduction to " + topic + ".<br><br>" +
+    "<b>Scene 2:</b> Show the main information or story.<br><br>" +
+    "<b>Scene 3:</b> Show interesting details and examples.<br><br>" +
+    "<b>Scene 4:</b> Finish with a strong conclusion and call to action.";
+
+  document.getElementById("visual").innerHTML =
+    "Create a high-quality cinematic vertical video about <b>" +
+    topic +
+    "</b>, suitable for YouTube Shorts, Instagram Reels and TikTok. " +
+    "Modern visuals, dramatic lighting, engaging composition, 9:16 format.";
+
 }
+
 </script>
 
 </body>

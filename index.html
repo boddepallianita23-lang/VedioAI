@@ -192,9 +192,7 @@ footer {
 </footer>
 
 <script>
-
-function createVideo() {
-
+async function createVideo() {
   const topic = document.getElementById("topic").value.trim();
   const style = document.getElementById("style").value;
   const language = document.getElementById("language").value;
@@ -206,34 +204,61 @@ function createVideo() {
   }
 
   document.getElementById("result").style.display = "block";
+  document.getElementById("script").innerHTML = "⏳ Creating your AI video plan...";
+  document.getElementById("voice").innerHTML = "Please wait...";
+  document.getElementById("scenes").innerHTML = "Please wait...";
+  document.getElementById("visual").innerHTML = "Please wait...";
 
-  document.getElementById("script").innerHTML =
-    "Today we are exploring <b>" + topic +
-    "</b>. This " + duration +
-    " " + style +
-    " video is designed for social media. " +
-    "Watch until the end to discover the most interesting facts and ideas about this topic!";
+  try {
+    const response = await fetch(
+      "https://dawn-snow-c3bb.boddepallithanuja12.workers.dev",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          topic: topic,
+          style: style,
+          language: language,
+          duration: duration
+        })
+      }
+    );
 
-  document.getElementById("voice").innerHTML =
-    "Voice language: <b>" + language +
-    "</b><br><br>" +
-    "Hello everyone! Today we're going to talk about " +
-    "<b>" + topic +
-    "</b>. Let's discover something amazing together!";
+    const data = await response.json();
 
-  document.getElementById("scenes").innerHTML =
-    "<b>Scene 1:</b> Show an exciting introduction to " + topic + ".<br><br>" +
-    "<b>Scene 2:</b> Show the main information or story.<br><br>" +
-    "<b>Scene 3:</b> Show interesting details and examples.<br><br>" +
-    "<b>Scene 4:</b> Finish with a strong conclusion and call to action.";
+    if (data.error) {
+      throw new Error(data.error);
+    }
 
-  document.getElementById("visual").innerHTML =
-    "Create a high-quality cinematic vertical video about <b>" +
-    topic +
-    "</b>, suitable for YouTube Shorts, Instagram Reels and TikTok. " +
-    "Modern visuals, dramatic lighting, engaging composition, 9:16 format.";
+    document.getElementById("script").innerHTML =
+      data.script || "No script generated.";
 
+    document.getElementById("voice").innerHTML =
+      "<b>Voice language: " + language + "</b><br><br>" +
+      (data.voiceover || "No voice-over generated.");
+
+    const scenes = data.scenes || [];
+
+    document.getElementById("scenes").innerHTML =
+      scenes.map(function(scene, index) {
+        return "<b>Scene " + (index + 1) + ":</b> " + scene + "<br><br>";
+      }).join("");
+
+    document.getElementById("visual").innerHTML =
+      data.visualPrompt || "No visual prompt generated.";
+
+  } catch (error) {
+    document.getElementById("script").innerHTML =
+      "❌ Something went wrong: " + error.message;
+
+    document.getElementById("voice").innerHTML = "";
+    document.getElementById("scenes").innerHTML = "";
+    document.getElementById("visual").innerHTML = "";
+  }
 }
+
 
 </script>
 

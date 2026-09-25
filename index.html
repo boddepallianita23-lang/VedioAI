@@ -263,9 +263,31 @@ async function createVideo() {
   }
 }
 
+function downloadScript() {
+  const script = document.getElementById("script").innerText;
+  const voice = document.getElementById("voice").innerText;
+  const scenes = document.getElementById("scenes").innerText;
+  const visual = document.getElementById("visual").innerText;
 
+  const content =
+    "VIDEOAI VIDEO SCRIPT\n\n" +
+    "VIDEO SCRIPT\n" + script + "\n\n" +
+    "VOICE-OVER\n" + voice + "\n\n" +
+    "SCENE PLAN\n" + scenes + "\n\n" +
+    "VISUAL PROMPT\n" + visual;
+
+  const blob = new Blob([content], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "VideoAI-Script.txt";
+  link.click();
+
+  URL.revokeObjectURL(url);
+      }
 </script>
 
 </body>
 </html>
-```
+

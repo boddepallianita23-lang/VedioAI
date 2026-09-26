@@ -290,13 +290,115 @@ function downloadScript() {
   URL.revokeObjectURL(url);
       }
   function generateVideo() {
-  const script = document.getElementById("script").innerText;
-  const scenes = document.getElementById("scenes").innerText;
+  const scenesText = document.getElementById("scenes").innerText;
+  const status = document.getElementById("videoStatus");
 
-  document.getElementById("videoStatus").innerHTML =
-    "🎬 Preparing your video...<br><br>" +
-    "📝 Script loaded.<br>" +
-    "🎬 " + scenes;
+  if (!scenesText || scenesText.trim() === "") {
+    status.innerHTML = "⚠️ Please create a video plan first.";
+    return;
+  }
+
+  status.innerHTML = "🎬 Creating your video... Please wait.";
+
+  const scenes = scenesText
+    .split("\n")
+    .map(s => s.trim())
+    .filter(s => s.length > 0);
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 1280;
+  canvas.height = 720;
+
+  const ctx = canvas.getContext("2d");
+
+  const stream = canvas.captureStream(30);
+
+  let mimeType = "video/webm;codecs=vp9";
+  if (!MediaRecorder.isTypeSupported(mimeType)) {
+    mimeType = "video/webm";
+  }
+
+  const recorder = new MediaRecorder(stream, { mimeType });
+  const chunks = [];
+
+  recorder.ondataavailable = event => {
+    if (event.data.size > 0) {
+      chunks.push(event.data);
+    }
+  };
+
+  recorder.onstop = () => {
+    const blob = new Blob(chunks, { type: "video/webm" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "VideoAI-Video.webm";
+    link.click();
+
+    URL.revokeObjectURL(url);
+
+    status.innerHTML =
+      "✅ Video created successfully!<br><br>" +
+      "🎥 Your video has been downloaded.";
+  };
+
+  recorder.start();
+
+  let index = 0;
+
+  function showScene() {
+    ctx.fillStyle = "#111827";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 48px Arial";
+    ctx.textAlign = "center";
+
+    const text = scenes[index];
+
+    const words = text.split(" ");
+    let line = "";
+    let lines = [];
+
+    for (let word of words) {
+      const testLine = line + word + " ";
+
+      if (ctx.measureText(testLine).width > 1050) {
+        lines.push(line);
+        line = word + " ";
+      } else {
+        line = testLine;
+      }
+    }
+
+    lines.push(line);
+
+    const lineHeight = 65;
+    const startY =
+      canvas.height / 2 -
+      ((lines.length - 1) * lineHeight) / 2;
+
+    lines.forEach((line, i) => {
+      ctx.fillText(
+        line.trim(),
+        canvas.width / 2,
+        startY + i * lineHeight
+      );
+    });
+
+    index++;
+
+    if (index < scenes.length) {
+      setTimeout(showScene, 3000);
+    } else {
+      setTimeout(() => {
+        recorder.stop();
+      }, 3000);
+    }
+  }
+
+  showScene();
   }
 </script>
 

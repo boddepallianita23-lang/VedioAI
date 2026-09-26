@@ -290,8 +290,13 @@ function downloadScript() {
   URL.revokeObjectURL(url);
       }
   function generateVideo() {
+  const script = document.getElementById("script").innerText;
+  const scenes = document.getElementById("scenes").innerText;
+
   document.getElementById("videoStatus").innerHTML =
-    "🎬 Preparing your video...";
+    "🎬 Preparing your video...<br><br>" +
+    "📝 Script loaded.<br>" +
+    "🎬 " + scenes;
   }
 </script>
 

@@ -392,7 +392,12 @@ duration: duration
   let index = 0;
 
   function showScene() {
-    ctx.fillStyle = "#111827";
+    if (aiImage && aiImage.complete) {
+  ctx.drawImage(aiImage, 0, 0, canvas.width, canvas.height);
+} else {
+  ctx.fillStyle = "#111827";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = "#ffffff";

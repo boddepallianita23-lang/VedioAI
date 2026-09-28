@@ -260,7 +260,9 @@ footer {
 
     document.getElementById("visual").innerHTML =
       data.visualPrompt || "No visual prompt generated.";
-
+    
+    } catch (error) {
+    
     document.getElementById("script").innerHTML =
       "❌ Something went wrong: " + error.message;
 

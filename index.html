@@ -203,7 +203,8 @@ footer {
 </footer>
 
 <script>
-async function createVideo() {
+
+  } catch (error) {async function createVideo() {
   const topic = document.getElementById("topic").value.trim();
   const style = document.getElementById("style").value;
   const language = document.getElementById("language").value;
@@ -260,7 +261,6 @@ async function createVideo() {
     document.getElementById("visual").innerHTML =
       data.visualPrompt || "No visual prompt generated.";
 
-  } catch (error) {
     document.getElementById("script").innerHTML =
       "❌ Something went wrong: " + error.message;
 
@@ -315,8 +315,10 @@ function downloadScript() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          action: "image",
-          prompt: "A cinematic, high-quality scene for a short educational video"
+        topic: topic,
+style: style,
+language: language,
+duration: duration
         })
       }
     );

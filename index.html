@@ -295,7 +295,7 @@ function downloadScript() {
 
   URL.revokeObjectURL(url);
       }
-  function generateVideo() {
+  async function generateVideo() {
   const scenesText = document.getElementById("scenes").innerText;
   const aiImage = document.querySelector("#imageStatus img");   
   const status = document.getElementById("videoStatus");

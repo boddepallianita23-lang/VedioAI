@@ -298,6 +298,7 @@ function downloadScript() {
   async function generateVideo() {
   const scenesText = document.getElementById("scenes").innerText;
   const aiImage = document.querySelector("#imageStatus img"); 
+  console.log("AI IMAGE:", aiImage);  
 
   if (aiImage) {
   await new Promise(resolve => {
